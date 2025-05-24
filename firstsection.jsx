@@ -18,7 +18,7 @@ function FirstSection() {
 
   const [teachers, setTeachers] = useState([
     {
-      firstName: "Sayorbek",
+      firstName: "Sayorbek",       
       lastName: "Holikov",
       phone: "+998901234567",
       gender: "Erkak",
@@ -156,14 +156,17 @@ function FirstSection() {
     setShowTable(true);
   };
   const addTeacherToSchedule = (teacher) => {
+  console.log("Teacher added to schedule:", teacher); // 👈 bu qatorni vaqtincha qo‘shing
+
   const newEntry = {
     room: `Room ${schedule.length + 1}`,
-    time: "16:00 - 17:30", // bu vaqtni siz xohlagancha sozlashingiz mumkin
-    teacher: `${teacher.firstName} ${teacher.lastName}`
+    time: "16:00 - 17:30",
+    teacher: `${teacher.firstName || ''} ${teacher.lastName || ''}`.trim()
   };
 
   setSchedule([...schedule, newEntry]);
 };
+
 
 
   return (
@@ -298,21 +301,29 @@ function FirstSection() {
           <div className="panel-header">
             <h2>{currentText.teachers}</h2>
             <button className="close-btn" onClick={() => setShowTeachersPanel(false)}>✕</button>
-            <button className="add-btn" onClick={(t) => {
-              addTeacherToSchedule(t);
-              setTeachers([...teachers, newTeacher]);
-              setNewTeacher({
-                firstName: "",
-                lastName: "",
-                phone: "",
-                gender: "Erkak",
-                email: "",
-                age: "",
-                subject: "",
-                groups: 0,
-                studentsCount: 0
-              });
-            }}>{currentText.add}</button>
+           <button className="add-btn" onClick={() => {
+  const cleanedTeacher = {
+    ...newTeacher,
+    firstName: newTeacher.firstName.trim(),
+    lastName: newTeacher.lastName.trim()
+  };
+
+  // Faqat tozalangan variantni qo‘shamiz
+  addTeacherToSchedule(cleanedTeacher);
+  setTeachers([...teachers, cleanedTeacher]);
+
+  setNewTeacher({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    gender: "Erkak",
+    email: "",
+    age: "",
+    subject: "",
+    groups: 0,
+    studentsCount: 0
+  });
+}}>{currentText.add}</button>
           </div>
 
           <div className="teacher-form">
